@@ -1,30 +1,46 @@
-import asyncio
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import Command
-from utils.misc.collect_exchange_rate import *
+from utils.db_api import db_commands
+import json
 from loader import dp
 
-async def process_exchange(message: types.Message):
-    # Вызов функций и вывод результатов
-    goverla_data = get_goverla_data()
-    print("Goverla Data:")
-    print(goverla_data)
-    print()
-
-    privat24_data = get_privat24_data()
-    print("Privat24 Data:")
-    print(privat24_data)
-    print()
-
-    monobank_data = get_monobank_data()
-    print("Monobank Data:")
-    print(monobank_data)
-    print()
-
-    nbu_data = get_nbu_data()
-    print("NBU Data:")
-    print(nbu_data)
 
 @dp.message_handler(Command("exchange"))
 async def exchange(message: types.Message):
-    await process_exchange(message)
+    latest_record = db_commands.get_latest_currency_record()
+
+    if latest_record:
+        buy_data = latest_record[0]
+        sell_data = latest_record[1]
+        created_at = latest_record[2]
+
+        formatted_message = "Курси валют:\nАктуальний курс на : {}\n\n".format(created_at.strftime('%d.%m.%y'))
+
+        for currency, rates in buy_data.items():
+            formatted_message += "{} - {}\n".format(currency.upper(), get_currency_symbol(currency))
+            
+            for bank, rate in rates.items():
+                formatted_message += "{}{:.4f}/{:.4f} - {}\n".format("🟢" if bank != "nbu" else "🔴", float(rate), float(sell_data[currency][bank]), get_bank_name(bank))
+            
+            formatted_message += "\n"
+        
+        await message.answer(formatted_message)
+    else:
+        await message.answer("No records found.")
+
+def get_currency_symbol(currency):
+    symbols = {
+        "usd": "💵",
+        "eur": "💶",
+        "gbp": "💷"
+    }
+    return symbols.get(currency, currency.upper())
+
+def get_bank_name(bank):
+    names = {
+        "privat24": "Privat24",
+        "monobank": "Monobank",
+        "nbu": "НБУ",
+        "goverla": "Goverla"  # Add other bank names here
+    }
+    return names.get(bank, bank.capitalize())

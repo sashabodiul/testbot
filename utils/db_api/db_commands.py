@@ -70,3 +70,20 @@ def add_currency_record(buy_data, sell_data):
     conn.commit()
     cursor.close()
     close_db(conn)
+
+
+def get_latest_currency_record():
+    try:
+        conn = conn_to_db()
+        cursor = conn.cursor()
+
+        query = "SELECT buy, sell, created_at FROM \"Currency\" ORDER BY created_at DESC LIMIT 1;"
+        cursor.execute(query)
+        
+        latest_record = cursor.fetchone()
+        cursor.close()
+        close_db(conn)
+        return latest_record
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None

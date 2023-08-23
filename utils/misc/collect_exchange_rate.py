@@ -115,5 +115,3 @@ def get_nbu_data():
     else:
         print("Error:", response_nbu.status_code)
         return []
-
-
