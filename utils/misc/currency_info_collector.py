@@ -1,8 +1,6 @@
 import requests
 
 
-import requests
-
 def collect_currency():
     currency_data = {}  # Создаем пустой словарь для хранения данных
 

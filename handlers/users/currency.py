@@ -5,7 +5,7 @@ from utils.misc import collect_currency, parse_exchange_table
 from loader import dp
 
 @dp.message_handler(Command("currency"))
-async def bot_help(message: types.Message):
+async def currency(message: types.Message):
     async def send_currency_message(delay=3):
         loading_message = await message.answer("Данные загружаются...")
         await asyncio.sleep(delay)
