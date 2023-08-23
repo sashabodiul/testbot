@@ -1,0 +1,2 @@
+# testbot
+Currency bot
