@@ -1,6 +1,7 @@
 from data import config
 import psycopg2
 from datetime import datetime
+import json 
 
 
 def conn_to_db():
@@ -46,7 +47,26 @@ def select_users():
         result = cursor.fetchall()
         cursor.close()
         close_db(conn)
-        return len(result) > 0
+        return result
     except Exception as e:
         print(f"An error occurred: {e}")
         return False
+    
+def add_currency_record(buy_data, sell_data):
+    conn = conn_to_db()
+    cursor = conn.cursor()
+
+    created_at = datetime.now()
+
+    # Преобразуем словари buy_data и sell_data в строки JSON
+    buy_data_json = json.dumps(buy_data)
+    sell_data_json = json.dumps(sell_data)
+
+    cursor.execute(
+        'INSERT INTO "Currency" (buy, sell, created_at) VALUES (%s, %s, %s)',
+        (buy_data_json, sell_data_json, created_at)
+    )
+
+    conn.commit()
+    cursor.close()
+    close_db(conn)

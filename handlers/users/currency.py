@@ -1,7 +1,6 @@
 import asyncio
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import Command
-from utils.db_api import db_commands as commands
 from utils.misc import collect_currency, parse_exchange_table
 from loader import dp
 
