@@ -38,3 +38,15 @@ def user_exists(telegram_id):
     close_db(conn)
     return result is not None
 
+def select_users():
+    try:
+        conn = conn_to_db()
+        cursor = conn.cursor()
+        cursor.execute("SELECT telegram_id FROM \"User\"")
+        result = cursor.fetchall()
+        cursor.close()
+        close_db(conn)
+        return len(result) > 0
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return False
