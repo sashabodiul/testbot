@@ -26,7 +26,7 @@ async def bot_help(message: types.Message):
             monobank_gbp = parse_exchange_table("https://banker.ua/bank/monobank/kurs-valyut/", "exchange-table", "GBP")
 
             message_text = (
-                "<b>Курси валют:</b>\n\n"
+                "<b>Курси валют: </b>\n\n"
                 f"<b>USD:UAH - 💵</b>\n"
                 f"🔴<b>{privat24_usd['buy']}</b> 🟢<b>{privat24_usd['sale']}</b> - Privat24\n"
                 f"🔴<b>{monobank_usd['rateBuy']}</b> 🟢<b>{monobank_usd['rateSell']}</b> - Monobank\n"
